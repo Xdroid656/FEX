@@ -32,7 +32,7 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release \
           -DUSE_LINKER=lld \
-          -DENABLE_LTO=True \
+          -DENABLE_LTO=False \
           -DBUILD_TESTING=False \
           -DENABLE_ASSERTIONS=False \
           -G Ninja ..
