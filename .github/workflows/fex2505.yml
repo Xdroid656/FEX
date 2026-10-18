@@ -24,6 +24,11 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y git cmake ninja-build clang lld llvm nasm qt6-base-dev python3
 
+    - name: Patch Host Architecture Check
+      run: |
+        # Comments out the architecture restriction block starting at line 144
+        sed -i '/FEX-Emu doesn'\''t support compiling for x86-64 hosts!/,/endif()/s/^/#/' CMakeLists.txt
+
     - name: Configure CMake
       run: |
         mkdir Build
@@ -31,8 +36,6 @@ jobs:
         CC=clang CXX=clang++ cmake \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release \
-          -DFEX_CI_BUILD=True \
-          -DHOST_ARCH_X86_64=True \
           -DPython3_EXECUTABLE=/usr/bin/python3 \
           -DUSE_LINKER=lld \
           -DENABLE_LTO=False \
