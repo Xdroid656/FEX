@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: 'FEX-Emu/FEX'
-        ref: 'FEX-2505'                     # Automatically targets the exact 2505 tag
+        ref: 'FEX-2505'
         submodules: recursive
 
     - name: Install Build Dependencies
@@ -31,8 +31,10 @@ jobs:
         CC=clang CXX=clang++ cmake \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release \
+          -DPython3_EXECUTABLE=/usr/bin/python3 \
           -DUSE_LINKER=lld \
           -DENABLE_LTO=False \
+          -DBUILD_TESTS=False \
           -DBUILD_TESTING=False \
           -DENABLE_ASSERTIONS=False \
           -G Ninja ..
