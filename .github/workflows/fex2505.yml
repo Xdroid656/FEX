@@ -25,7 +25,7 @@ jobs:
         LLVM_MINGW_TAG="20251104"
         TOOLCHAIN_DIR="/opt/llvm-mingw"
         
-        wget -q "https://github.com\(LLVM_MINGW_TAG/llvm-mingw-\)LLVM_MINGW_TAG-ucrt-ubuntu-22.04-x86_64.tar.xz" -O llvm.tar.xz
+        wget -q "https://github.com\({LLVM_MINGW_TAG}/llvm-mingw-\){LLVM_MINGW_TAG}-ucrt-ubuntu-22.04-x86_64.tar.xz" -O llvm.tar.xz
         
         sudo rm -rf "\$TOOLCHAIN_DIR"
         sudo mkdir -p "\$TOOLCHAIN_DIR"
@@ -54,8 +54,7 @@ jobs:
         git config --global --add safe.directory '*'
         cd src
         COMMIT_HASH=\$(git rev-parse --short HEAD)
-        VERSION_NAME="FEX-2505-Nightly-\${COMMIT_HASH}"
-        echo "VERSION_NAME=\({VERSION_NAME}" >> \)GITHUB_ENV
+        echo "VERSION_NAME=FEX-2505-Nightly-\({COMMIT_HASH}" >> \)GITHUB_ENV
 
     - name: Patch FEX CMake Constraints
       run: |
@@ -142,7 +141,7 @@ jobs:
           "type": "FEXCore",
           "versionName": "\${{ env.VERSION_NAME }}",
           "versionCode": \${{ github.run_number }},
-          "description": "FEXCore & WOWBox64 Nightly\\n\${{ env.VERSION_NAME }}",
+          "description": "FEXCore & WOWBox64 Nightly\n\${{ env.VERSION_NAME }}",
           "author": "FEX-Emu / Box64",
           "files": [
             {
