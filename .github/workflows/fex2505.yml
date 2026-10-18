@@ -25,7 +25,7 @@ jobs:
         LLVM_MINGW_TAG="20251104"
         TOOLCHAIN_DIR="/opt/llvm-mingw"
         
-        wget -q "https://github.com\({LLVM_MINGW_TAG}/llvm-mingw-\){LLVM_MINGW_TAG}-ucrt-ubuntu-22.04-x86_64.tar.xz" -O llvm.tar.xz
+        wget -q "https://github.com/mstorsjo/llvm-mingw/releases/download/\(LLVM_MINGW_TAG/llvm-mingw-\)LLVM_MINGW_TAG-ucrt-ubuntu-22.04-x86_64.tar.xz" -O llvm.tar.xz
         
         sudo rm -rf "\$TOOLCHAIN_DIR"
         sudo mkdir -p "\$TOOLCHAIN_DIR"
@@ -33,11 +33,10 @@ jobs:
         
         echo "\(TOOLCHAIN_DIR/bin" >> \)GITHUB_PATH
 
-    - name: Checkout FEX (FEX-2505)
+    - name: Checkout FEX
       uses: actions/checkout@v4
       with:
         repository: FEX-Emu/FEX
-        ref: FEX-2505
         submodules: recursive
         fetch-depth: 0
         path: src
@@ -53,15 +52,13 @@ jobs:
       run: |
         git config --global --add safe.directory '*'
         cd src
+        git fetch --tags --force
+        LATEST_TAG=\$(git describe --tags --abbrev=0 2>/dev/null || echo "FEX-Unknown")
         COMMIT_HASH=\$(git rev-parse --short HEAD)
-        echo "VERSION_NAME=FEX-2505-Nightly-\({COMMIT_HASH}" >> \)GITHUB_ENV
-
-    - name: Patch FEX CMake Constraints
-      run: |
-        # Fixes structural architecture naming variances in older toolchain configurations
-        if [ -f "src/Data/CMake/toolchain_mingw.cmake" ]; then
-          sed -i 's/MATCHES "arm64ec"/MATCHES "arm64ec|ARM64EC"/g' src/Data/CMake/toolchain_mingw.cmake || true
-        fi
+        
+        VERSION_NAME="\({LATEST_TAG}-Nightly-\){COMMIT_HASH}"
+        
+        echo "VERSION_NAME=\({VERSION_NAME}" >> \)GITHUB_ENV
 
     - name: Build FEXCore
       run: |
@@ -76,6 +73,7 @@ jobs:
           
           cmake -G Ninja -Wno-dev \
             -DCMAKE_BUILD_TYPE=Release \
+            -DFEX_CI_BUILD=True \
             -DCMAKE_TOOLCHAIN_FILE=../Data/CMake/toolchain_mingw.cmake \
             -DMINGW_TRIPLE="\${triple}-w64-mingw32" \
             -DCMAKE_INSTALL_PREFIX=/usr \
@@ -141,7 +139,7 @@ jobs:
           "type": "FEXCore",
           "versionName": "\${{ env.VERSION_NAME }}",
           "versionCode": \${{ github.run_number }},
-          "description": "FEXCore & WOWBox64 Nightly\n\${{ env.VERSION_NAME }}",
+          "description": "FEXCore & WOWBox64 Nightly\\n\${{ env.VERSION_NAME }}",
           "author": "FEX-Emu / Box64",
           "files": [
             {
