@@ -32,6 +32,7 @@ jobs:
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release \
           -DFEX_CI_BUILD=True \
+          -DHOST_ARCH_X86_64=True \
           -DPython3_EXECUTABLE=/usr/bin/python3 \
           -DUSE_LINKER=lld \
           -DENABLE_LTO=False \
